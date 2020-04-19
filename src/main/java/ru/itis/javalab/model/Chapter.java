@@ -16,8 +16,13 @@ import java.util.List;
 public class Chapter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    @OneToMany
+    @Column(name = "chapter_id")
+    Long chapterId;
+    @OneToMany(mappedBy = "chapter")
     List<Page> pages;
+    @Column(name = "name")
     String name;
+    @ManyToOne
+    @JoinColumn(name = "manga_id")
+    Manga manga;
 }

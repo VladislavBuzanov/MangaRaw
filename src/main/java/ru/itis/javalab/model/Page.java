@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Data
 @Builder
@@ -18,7 +15,14 @@ import javax.persistence.Id;
 public class Page {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    @Column(name = "page_id")
+    Long pageId;
+    @Column(name = "img")
     String imgSource;
+    @Column(name = "name")
     String name;
+    @ManyToOne
+    @JoinColumn(name = "chapter_id")
+    Chapter chapter;
+
 }

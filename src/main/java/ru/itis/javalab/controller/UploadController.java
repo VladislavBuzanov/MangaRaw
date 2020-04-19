@@ -23,6 +23,6 @@ public class UploadController {
     @PreAuthorize("hasRole(ADMIN)")
     @RequestMapping(value = "/upload", method = RequestMethod.GET)
     public ModelAndView uploadFile() {
-        return new ModelAndView("upload_p   age");
+        return new ModelAndView("upload_page");
     }
 }

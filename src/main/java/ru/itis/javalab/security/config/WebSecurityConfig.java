@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity
-@Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -27,16 +26,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        (((HttpSecurity) ((ExpressionUrlAuthorizationConfigurer.AuthorizedUrl) http.authorizeRequests().anyRequest()).permitAll().and()).formLogin().and()).httpBasic();
-
         http.csrf().disable();
         http.authorizeRequests().anyRequest().permitAll();
-
-
-//        http.authorizeRequests()
-//                .antMatchers("/register").permitAll()
-//                .antMatchers("/login").permitAll()
-//                .antMatchers("/profile").authenticated();
 
         http.formLogin()
                 .loginPage("/login")

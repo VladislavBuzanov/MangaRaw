@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import ru.itis.javalab.dto.SignUpDto;
-import ru.itis.javalab.model.Role;
+import ru.itis.javalab.model.enumerated.Role;
 import ru.itis.javalab.model.User;
-import ru.itis.javalab.service.SignUpService;
+import ru.itis.javalab.service.interfaces.SignUpService;
 
 import java.util.UUID;
 
