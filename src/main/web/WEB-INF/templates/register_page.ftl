@@ -1,5 +1,7 @@
+<#ftl encoding="UTF-8"/>
+<#import "/spring.ftl" as spring/>
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 
 <head>
     <meta charset="utf-8">
@@ -12,19 +14,24 @@
 </head>
 
 <body>
+<#--<#if error??>
+    <#list error as e>
+        <@spring.message code="${e}" />
+    </#list>
+<#else>
+</#if>-->
 <div class="register-photo">
     <div class="form-container">
+        <@spring.message code="signUp"/>
+        <@spring.bind "signUpDto"/>
         <form method="post">
-            <h2 class="text-center"><strong>Create</strong> an account.</h2>
-            <div class="form-group"><input class="form-control" type="text" name="login" placeholder="Login"></div>
-            <div class="form-group"><input class="form-control" type="text" name="email" placeholder="Email"></div>
-            <div class="form-group"><input class="form-control" type="password" name="password" placeholder="Password ">
-            </div>
-            <input class="form-control" type="password" name="password-repeat" placeholder="Password (repeat)">
-            <div class="form-group">
-                <button class="btn btn-primary btn-block" type="submit">Sign Up</button>
-            </div>
-            <a href="#" class="already">You already have an account? Login here.</a></form>
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+            <@spring.formInput "signUpDto.login"/>
+            <@spring.formInput "signUpDto.email"/>
+            <@spring.formPasswordInput "signUpDto.password"/>
+            <@spring.showErrors ""/>
+            <button class="btn btn-primary btn-block" type="submit">Sign Up</button>
+            <a href="/login" class="already">You already have an account? Login here.</a></form>
     </div>
 </div>
 <script src="../static/js/jquery.min.js"></script>

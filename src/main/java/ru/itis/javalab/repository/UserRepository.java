@@ -1,21 +1,25 @@
 package ru.itis.javalab.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Component;
 import ru.itis.javalab.model.User;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface UserRepository {
+@Component
+public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findUserByLogin(String login);
 
-    void save(User user);
+    User save(User user);
 
-    void update(User user);
+    @Modifying
+    @Query("update User set isConfirmed = true where id = ?1")
+    void confirmById(Long id);
 
     Optional<User> findUserByCode(String code);
-
-    List<User> findAllUsers();
 
     Optional<User> findUserById(Long id);
 

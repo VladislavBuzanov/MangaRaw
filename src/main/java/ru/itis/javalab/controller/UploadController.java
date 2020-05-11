@@ -12,7 +12,7 @@ import java.io.IOException;
 
 @Controller
 public class UploadController {
-    @PreAuthorize("hasRole(ADMIN)")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @RequestMapping(value = "/upload_file", method = RequestMethod.POST)
     public ModelAndView uploadFile(@RequestParam("files") MultipartFile[] multipartFiles) throws IOException {
 
@@ -20,7 +20,7 @@ public class UploadController {
 
     }
 
-    @PreAuthorize("hasRole(ADMIN)")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @RequestMapping(value = "/upload", method = RequestMethod.GET)
     public ModelAndView uploadFile() {
         return new ModelAndView("upload_page");

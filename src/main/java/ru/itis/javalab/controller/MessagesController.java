@@ -44,7 +44,7 @@ public class MessagesController {
                 // добавляем сообщение
                 if (!message.getText().equals("Login")) {
                     Message message1 = Message.builder()
-                            .user(User.builder().userId(message.getUserId()).build())
+                            .user(User.builder().id(message.getUserId()).build())
                             .date(new Date(new java.util.Date().getTime()))
                             .message(message.getText())
                             .chat(Chat.builder().chatId(message.getPageId()).build())

@@ -23,17 +23,17 @@ public class ChatController {
     @Autowired
     ChatService chatService;
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(value = "/chat", method = RequestMethod.GET)
     public ModelAndView getChatPage() {
 
         Chat chat = chatService.getChatByUserId(
                 ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal())
-                        .getUser().getUserId());
+                        .getUser().getId());
         ModelAndView maw = new ModelAndView("chat");
         maw.addObject("history", chat.getHistory());
         maw.addObject("pageId", chat.getChatId());
-        maw.addObject("userId", chat.getUser().getUserId());
+        maw.addObject("userId", chat.getUser().getId());
         return maw;
 
     }
@@ -45,7 +45,7 @@ public class ChatController {
         ModelAndView maw = new ModelAndView("chat");
         maw.addObject("history", chat.getHistory());
         maw.addObject("pageId", chat.getChatId());
-        maw.addObject("userId", ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser().getUserId());
+        maw.addObject("userId", ((UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser().getId());
         return maw;
     }
 }

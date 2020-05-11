@@ -12,7 +12,6 @@ import ru.itis.javalab.model.Chat;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 import java.sql.PreparedStatement;
 import java.util.Optional;
 
@@ -76,7 +75,7 @@ public class ChatRepositoryImpl implements ChatRepository {
         jdbcTemplate.update(
                 connection -> {
                     PreparedStatement ps = connection.prepareStatement(SQL_SAVE_CHAT, new String[]{"chat_id"});
-                    ps.setLong(1, chat.getUser().getUserId());
+                    ps.setLong(1, chat.getUser().getId());
                     return ps;
                 }, keyHolder);
         chat.setChatId(keyHolder.getKey().longValue());

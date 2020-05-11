@@ -30,7 +30,7 @@ public class ChatServiceImpl implements ChatService {
             if (userOptional.isPresent()) {
                 User user = userOptional.get();
                 Chat chat = chatRepository.save(Chat.builder()
-                        .user(User.builder().userId(user.getUserId()).build())
+                        .user(User.builder().id(user.getId()).build())
                         .history(new ArrayList<>())
                         .build());
                 return chat;

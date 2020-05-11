@@ -2,8 +2,15 @@ package ru.itis.javalab.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.context.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -16,44 +23,42 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
-import ru.itis.javalab.model.Chat;
 import ru.itis.javalab.model.Message;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Properties;
 
 
 @Configuration
 @ComponentScan(basePackages = "ru.itis.javalab")
 @PropertySource("classpath:application.properties")
 @EnableTransactionManagement
-public class ApplicationContextConfig implements WebMvcConfigurer {
+@EnableJpaRepositories(basePackages = {"ru.itis.javalab.repository"})
+public class ApplicationContextConfig {
 
-
-    private final Environment environment;
-
-    public ApplicationContextConfig(Environment environment) {
-        this.environment = environment;
-    }
+    @Autowired
+    private Environment environment;
 
     @Bean
     public Map<Long, List<Message>> chatMap() {
         return new HashMap<>();
     }
 
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-
-    @Bean
+    @Bean(name = "driverManagerDS")
     public DataSource driverManagerDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(Objects.requireNonNull(environment.getProperty("db.driver")));
@@ -96,28 +101,29 @@ public class ApplicationContextConfig implements WebMvcConfigurer {
         return resolver;
     }
 
-    @Bean
-    public DataSource hikariDataSource() {
-
-        return new HikariDataSource(hikariConfig());
+    @Primary
+    @Bean(name = "hikari")
+    public DataSource hikariDataSource(HikariConfig config) {
+        return new HikariDataSource(config);
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager() {
+    public PlatformTransactionManager transactionManager(DataSource dataSource, EntityManagerFactory managerFactory) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory(entityManagerFactory());
+        transactionManager.setEntityManagerFactory(managerFactory);
+        transactionManager.setDataSource(dataSource);
         return transactionManager;
     }
 
     @Bean
-    public EntityManagerFactory entityManagerFactory() {
+    public EntityManagerFactory entityManagerFactory(@Qualifier("hikari") DataSource dataSource) {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setGenerateDdl(Boolean.TRUE);
         vendorAdapter.setShowSql(Boolean.TRUE);
         LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
         factory.setJpaVendorAdapter(vendorAdapter);
         factory.setPackagesToScan("ru.itis.javalab.model");
-        factory.setDataSource(hikariDataSource());
+        factory.setDataSource(dataSource);
         factory.setJpaProperties(additionalProperties());
         factory.afterPropertiesSet();
         factory.setLoadTimeWeaver(new InstrumentationLoadTimeWeaver());
@@ -134,8 +140,8 @@ public class ApplicationContextConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(hikariDataSource());
+    public JdbcTemplate jdbcTemplate(@Qualifier("hikari") DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
     }
 
     @Bean

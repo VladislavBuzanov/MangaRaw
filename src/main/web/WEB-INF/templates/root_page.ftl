@@ -9,6 +9,17 @@
 </head>
 <body>
 Welcome to the root page, you must be authenticated to be there :)<br>
-Hello, ${user}
+Hello, ${user} <br>
+${content}
+<form action="/profile" method="post">
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+    <label> Save in session
+        <input type="text" name="content">
+    </label> <input type="submit">
+</form>
+<form action="/logout" method="post">
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+    <input type="submit" value="Logout">
+</form>
 </body>
 </html>

@@ -20,7 +20,7 @@ public class ConfirmationServiceImpl implements ConfirmationService {
             User user = userOpt.get();
             user.setConfirmed(true);
             user.setCode(null);
-            userRepository.update(user);
+            userRepository.confirmById(user.getId());
             return true;
         } else
             return false;

@@ -9,6 +9,7 @@
 </head>
 <body>
 <form action="/upload_file" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
     <input type="text" name="manga_name" placeholder="Manga name"><br>
     <input type="text" name="chapter_name" placeholder="Chapter name"><br>
     <input type="text" name="chapter_number" placeholder="Chapter number"><br>

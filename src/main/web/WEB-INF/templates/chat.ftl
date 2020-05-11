@@ -63,7 +63,7 @@
         </tr>
         <#list history as message>
             <tr>
-                <td>${message.user.userId}</td>
+                <td>${message.user.getId}</td>
                 <td>${message.message}</td>
             </tr>
         </#list>
