@@ -16,6 +16,6 @@ public class SignUpDto {
     private String login;
 //    @Email(message = "{errors.incorrect-email}")
     private String email;
-    @Size(min = 8, max = 12, message = "{errors.incorrect.password}")
+    @Size(min = 8, max = 12)
     private String password;
 }
